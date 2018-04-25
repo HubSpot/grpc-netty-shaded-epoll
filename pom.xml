@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+
+  <parent>
+    <groupId>com.hubspot</groupId>
+    <artifactId>basepom</artifactId>
+    <version>18.3</version>
+  </parent>
+
+  <groupId>com.hubspot.grpc</groupId>
+  <artifactId>grpc-netty-shaded-epoll</artifactId>
+  <version>1.11.0-SNAPSHOT</version>
+
+  <properties>
+    <deploy.pom.path>${project.build.directory}/${project.artifactId}-${project.version}.pom</deploy.pom.path>
+    <!-- Keep this in sync with the netty version used by grpc -->
+    <dep.netty.version>4.1.22.Final</dep.netty.version>
+    <dep.netty.epoll.classifier>linux-x86_64</dep.netty.epoll.classifier>
+    <basepom.check.skip-dependency>true</basepom.check.skip-dependency>
+  </properties>
+
+  <dependencies>
+    <dependency>
+      <groupId>io.netty</groupId>
+      <artifactId>netty-transport-native-epoll</artifactId>
+      <classifier>${dep.netty.epoll.classifier}</classifier>
+    </dependency>
+  </dependencies>
+
+  <build>
+    <pluginManagement>
+      <plugins>
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-deploy-plugin</artifactId>
+          <configuration>
+            <pomFile>${deploy.pom.path}</pomFile>
+          </configuration>
+        </plugin>
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-install-plugin</artifactId>
+          <configuration>
+            <pomFile>${deploy.pom.path}</pomFile>
+          </configuration>
+        </plugin>
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-shade-plugin</artifactId>
+          <configuration combine.self="override">
+            <shadedArtifactAttached>false</shadedArtifactAttached>
+            <createSourcesJar>true</createSourcesJar>
+            <shadeSourcesContent>true</shadeSourcesContent>
+            <createDependencyReducedPom>true</createDependencyReducedPom>
+            <!-- Don't promote transitive deps, they'll be the wrong versions and not be relocated -->
+            <promoteTransitiveDependencies>false</promoteTransitiveDependencies>
+            <dependencyReducedPomLocation>${deploy.pom.path}</dependencyReducedPomLocation>
+            <artifactSet>
+              <includes>
+                <include>io.netty:netty-transport-native-epoll</include>
+                <include>io.netty:netty-transport-native-unix-common</include>
+              </includes>
+            </artifactSet>
+            <filters>
+              <filter>
+                <artifact>io.netty:netty-transport-native-epoll</artifact>
+                <excludes>
+                  <!-- This file needs to be renamed to match the shaded package name -->
+                  <exclude>META-INF/native/libnetty_transport_native_epoll_x86_64.so</exclude>
+                </excludes>
+              </filter>
+            </filters>
+            <relocations>
+              <relocation>
+                <pattern>io.netty</pattern>
+                <!-- This needs to match the relocation used by grpc-netty-shaded -->
+                <shadedPattern>io.grpc.netty.shaded.io.netty</shadedPattern>
+              </relocation>
+            </relocations>
+          </configuration>
+        </plugin>
+      </plugins>
+    </pluginManagement>
+    <plugins>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-shade-plugin</artifactId>
+        <executions>
+          <execution>
+            <goals>
+              <goal>shade</goal>
+            </goals>
+            <phase>package</phase>
+          </execution>
+        </executions>
+      </plugin>
+    </plugins>
+  </build>
+</project>
