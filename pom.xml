@@ -19,6 +19,16 @@
     <basepom.check.skip-dependency>true</basepom.check.skip-dependency>
   </properties>
 
+  <dependencyManagement>
+    <dependencies>
+      <dependency>
+        <groupId>io.netty</groupId>
+        <artifactId>netty-tcnative-boringssl-static</artifactId>
+        <version>${dep.netty-tcnative-boringssl-static.version}</version>
+      </dependency>
+    </dependencies>
+  </dependencyManagement>
+
   <dependencies>
     <dependency>
       <groupId>io.netty</groupId>
