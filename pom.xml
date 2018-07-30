@@ -8,23 +8,21 @@
     <version>18.3</version>
   </parent>
 
-  <groupId>com.hubspot.grpc</groupId>
-  <artifactId>grpc-netty-shaded-epoll</artifactId>
-  <version>1.11.0-SNAPSHOT</version>
+  <groupId>com.hubspot.netty</groupId>
+  <artifactId>grpc-netty-tcnative-boringssl-static-shaded</artifactId>
+  <version>2.0.7.Final-SNAPSHOT</version>
 
   <properties>
     <deploy.pom.path>${project.build.directory}/${project.artifactId}-${project.version}.pom</deploy.pom.path>
-    <!-- Keep this in sync with the netty version used by grpc -->
-    <dep.netty.version>4.1.22.Final</dep.netty.version>
-    <dep.netty.epoll.classifier>linux-x86_64</dep.netty.epoll.classifier>
+    <!-- Keep this in sync with the netty-tcnative-boringssl-static version used by grpc -->
+    <dep.netty-tcnative-boringssl-static.version>2.0.7.Final</dep.netty-tcnative-boringssl-static.version>
     <basepom.check.skip-dependency>true</basepom.check.skip-dependency>
   </properties>
 
   <dependencies>
     <dependency>
       <groupId>io.netty</groupId>
-      <artifactId>netty-transport-native-epoll</artifactId>
-      <classifier>${dep.netty.epoll.classifier}</classifier>
+      <artifactId>netty-tcnative-boringssl-static</artifactId>
     </dependency>
   </dependencies>
 
@@ -58,16 +56,15 @@
             <dependencyReducedPomLocation>${deploy.pom.path}</dependencyReducedPomLocation>
             <artifactSet>
               <includes>
-                <include>io.netty:netty-transport-native-epoll</include>
-                <include>io.netty:netty-transport-native-unix-common</include>
+                <include>io.netty:netty-tcnative-boringssl-static</include>
               </includes>
             </artifactSet>
             <filters>
               <filter>
-                <artifact>io.netty:netty-transport-native-epoll</artifact>
+                <artifact>io.netty:netty-tcnative-boringssl-static</artifact>
                 <excludes>
-                  <!-- This file needs to be renamed to match the shaded package name -->
-                  <exclude>META-INF/native/libnetty_transport_native_epoll_x86_64.so</exclude>
+                  <!-- These files needs to be renamed to match the shaded packages -->
+                  <exclude>META-INF/native/*</exclude>
                 </excludes>
               </filter>
             </filters>
