@@ -10,12 +10,12 @@
 
   <groupId>com.hubspot.grpc</groupId>
   <artifactId>grpc-netty-shaded-epoll</artifactId>
-  <version>1.11.0-SNAPSHOT</version>
+  <version>1.16.1-SNAPSHOT</version>
 
   <properties>
     <deploy.pom.path>${project.build.directory}/${project.artifactId}-${project.version}.pom</deploy.pom.path>
     <!-- Keep this in sync with the netty version used by grpc -->
-    <dep.netty.version>4.1.22.Final</dep.netty.version>
+    <dep.netty.version>4.1.30.Final</dep.netty.version>
     <dep.netty.epoll.classifier>linux-x86_64</dep.netty.epoll.classifier>
     <basepom.check.skip-dependency>true</basepom.check.skip-dependency>
   </properties>
