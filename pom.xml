@@ -5,17 +5,17 @@
   <parent>
     <groupId>com.hubspot</groupId>
     <artifactId>basepom</artifactId>
-    <version>18.3</version>
+    <version>25.3</version>
   </parent>
 
   <groupId>com.hubspot.grpc</groupId>
   <artifactId>grpc-netty-shaded-epoll</artifactId>
-  <version>1.16.1-SNAPSHOT</version>
+  <version>1.21.0-SNAPSHOT</version>
 
   <properties>
     <deploy.pom.path>${project.build.directory}/${project.artifactId}-${project.version}.pom</deploy.pom.path>
     <!-- Keep this in sync with the netty version used by grpc -->
-    <dep.netty.version>4.1.30.Final</dep.netty.version>
+    <dep.netty.version>4.1.34.Final</dep.netty.version>
     <dep.netty.epoll.classifier>linux-x86_64</dep.netty.epoll.classifier>
     <basepom.check.skip-dependency>true</basepom.check.skip-dependency>
   </properties>
